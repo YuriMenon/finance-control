@@ -96,6 +96,16 @@ const GraficoGastos = () => {
     fetchDespesas();
   }, [mes, user]);
 
+  const handleMesChange = (e) => {
+    const { value } = e.target;
+    if (value) { // Se o valor não for uma string vazia
+      setMes(value);
+    } else {
+      // Resetar para o mês atual
+      setMes(format(new Date(), 'yyyy-MM'));
+    }
+  }
+
   // Opções comuns para ambos os gráficos
   const opcoesComuns = {
     plugins: {
@@ -164,9 +174,10 @@ const opcoesBarras = {
             type="month"
             id="mes"
             value={mes}
-            onChange={(e) => setMes(e.target.value)}
+            onChange={handleMesChange}
             style={styles.input}
             disabled={loading}
+            max={mes}
           />
         </div>
 

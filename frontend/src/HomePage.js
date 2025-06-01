@@ -18,6 +18,7 @@ const HomePage = () => {
   const [transacaoParaExcluir, setTransacaoParaExcluir] = useState(null);
   const [mensagem, setMensagem] = useState('');
   const [mostrarAlertaGastos, setMostrarAlertaGastos] = useState(true);
+  const maxMonth = format(new Date(), 'yyyy-MM');
 
   // Formatar data para exibição (ex: "Outubro 2023")
  // Formatar data para exibição e para a API
@@ -73,9 +74,26 @@ const HomePage = () => {
 
    // Manipulador de mudança de mês
    const handleMonthChange = (e) => {
-    const [year, month] = e.target.value.split('-');
-    const newDate = new Date(year, month - 1, 1);
-    setCurrentDate(newDate);
+    const value = e.target.value; // Ex: "2023-10" ou ""
+
+    if (value) { // Se o valor não for uma string vazia
+      const [yearStr, monthStr] = value.split('-');
+      const year = parseInt(yearStr, 10);
+      const month = parseInt(monthStr, 10);
+
+      // Verifica se year e month são números válidos após o parse
+      if (!isNaN(year) && !isNaN(month) && month >= 1 && month <= 12) {
+        const newDate = new Date(year, month - 1, 1); // month - 1 pois os meses em Date são 0-indexados
+        setCurrentDate(newDate);
+      } else {
+        // Valor inválido (não deveria acontecer com input type="month" a menos que
+        console.warn('Formato de mês inválido:', value);
+        goToCurrentMonth(); // Ou alguma outra lógica de fallback
+      }
+    } else {
+      // O campo foi limpo (botão "X" clicado ou texto deletado)
+      goToCurrentMonth();
+    }
   };
 
   // Voltar para o mês atual
@@ -212,7 +230,7 @@ const HomePage = () => {
               value={monthInputValue}
               onChange={handleMonthChange}
               style={styles.monthInput}
-              max={new Date().toISOString().split('T')[0]} // Não permite datas futuras
+              max={maxMonth} // não permite datas futuras
             />
             
             <button 
