@@ -20,6 +20,14 @@ const CadastroUsuario = () => {
       setIsLoading(false);
       return;
     }
+
+     // Validação do formato do e-mail
+     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+     if (!emailRegex.test(email)) {
+       setMensagem('Por favor, insira um formato de e-mail válido (ex: nome@dominio.com).');
+       setIsLoading(false);
+       return;
+     }
   
     if (senha !== confirmarSenha) {
       setMensagem('As senhas não coincidem.');
@@ -50,7 +58,6 @@ const CadastroUsuario = () => {
     }
   };
 
-  // Seu JSX original (mantido integralmente)
   return (
     <div style={styles.background}>
       <div style={styles.container}>
